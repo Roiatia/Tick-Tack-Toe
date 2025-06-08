@@ -1,0 +1,467 @@
+/*
+This is a Tick Tack Toe game.
+its a personal project of mine and it will have more features soon!
+read the READ.ME file for more info on the development
+@ALL RIGHTS RESERVED TO ME :)
+@ROI ATIA
+*/
+
+package TickTackToe_game;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class TickTackToe {
+public static void main(String[] args) {
+	Scanner input = new Scanner(System.in);
+	System.out.println("   ╔════════════════════════════════════════╗ ");
+    System.out.println("   ║      🎮 TICK TACK TOE MENU 🎮          ║ ");
+    System.out.println("   ╠════════════════════════════════════════╣ ");
+    System.out.println("   ║      1. Player vs Player               ║ ");
+    System.out.println("   ║      2. Player vs Machine              ║ ");
+    System.out.println("   ║      3. Player vs Player Tournament    ║ ");
+    System.out.println("   ║      4. Player vs Machine Tournament   ║ ");
+    System.out.println("   ║      5. Exit                           ║ ");
+    System.out.println("   ╚════════════════════════════════════════╝ ");
+    
+    
+	// menu for user choices
+	int choice = input.nextInt();
+	switch(choice) {
+	case 1 : 
+		playerVsPlayer(input);
+		break;
+	
+	case 2 :
+		playerVsMachine(input);
+		break;
+	case 3:
+		tournamentVsPlayer(input);
+		break;
+	case 4:
+		tournamentVsMachine(input);
+		break;
+	case 5: 
+		System.out.println("Now exiting.... "); 
+		break;
+		
+	}
+	
+		
+	}
+
+public static void generateBoard (char [][] board) {
+	for(int i = 0; i < board.length; i++) {
+		for( int j = 0; j < board.length; j++) {
+			board [i][j] = '_' ;
+		}
+		System.out.println();
+	}
+	
+}
+
+public static void PrintBoard(char [][] board) {
+	  System.out.println("   1   2   3"); //  col numbers
+	    for (int i = 0; i < 3; i++) {
+	        System.out.print((i + 1) + " "); //  row  numbers
+	        for (int j = 0; j < 3; j++) {
+	            System.out.print(" " + board[i][j] + " ");
+	            if (j < 2) System.out.print("|");
+	        }
+	        System.out.println();
+	        if (i < 2) {
+	            System.out.println("  ---+---+---");
+	        }
+	        
+	    }
+	    System.out.println();
+}
+
+public static boolean checkForWin(char board[][] , char currentPlayer ) {
+	for (int i = 0; i < 3; i++) {
+        if (board[i][0] == currentPlayer &&
+            board[i][1] == currentPlayer &&
+            board[i][2] == currentPlayer) {
+            return true;
+        }
+    }
+
+    // col
+    for (int i = 0; i < 3; i++) {
+        if (board[0][i] == currentPlayer &&
+            board[1][i] == currentPlayer &&
+            board[2][i] == currentPlayer) {
+            return true;
+        }
+    }
+
+   // main cross
+    if (board[0][0] == currentPlayer &&
+        board[1][1] == currentPlayer &&
+        board[2][2] == currentPlayer) {
+        return true;
+    }
+
+    //  second cross
+    if (board[0][2] == currentPlayer &&
+        board[1][1] == currentPlayer &&
+        board[2][0] == currentPlayer) {
+        return true;
+    }
+
+    return false;
+}
+
+// player vs player option
+public static void playerVsPlayer (Scanner input) {
+	int playerXScore = 0;
+	int playerOScore = 0;
+	int ties = 0;
+	
+	while(true) { //play again loop
+	int moves = 0;
+	char currentPlayer = 'X';
+	
+	char [][] board = new char[3][3];
+	generateBoard(board);
+	
+	while(true) {
+		PrintBoard(board);
+		System.out.println("Row(1 - 3) Col(1 - 3)");
+		System.out.println("Please enter row and collom for player: " + currentPlayer );
+		int col = input.nextInt() - 1;
+		int row = input.nextInt() - 1;
+		
+		//checks for invalid input
+		if(row < 0 || row > 2 || col < 0 || col > 2 ) {
+			System.out.println("Invalid input!");
+			continue;
+		}
+		
+
+		if(board[row][col] != '_') {
+			System.out.println("Cell is taken! choose another...");
+			continue;
+		} 
+		// moves the player	
+		board[row][col] = currentPlayer;
+		moves++;
+					
+		
+			
+			// checks for a tie
+			if(moves == 9) {
+				PrintBoard(board);
+				System.out.println(" It's a tie ! 🤝  ");
+				ties++;
+				break;
+			}
+			
+			if(checkForWin(board, currentPlayer)) {
+				PrintBoard(board);
+				System.out.println("The winner is : " + currentPlayer);
+				
+				//score keeping feature
+				if(currentPlayer == 'X') {
+					playerXScore++;
+				}else {
+					playerOScore++;
+				}
+				
+				break;
+			}
+			
+			if(currentPlayer == 'X') {
+				currentPlayer = 'O';
+			} else {
+				currentPlayer = 'X';
+			}
+			System.out.println("The next player is : " + currentPlayer);
+
+			
+		}
+	
+			 //ScoreBoard
+			System.out.println();
+		    System.out.println("======= 🏆 SCOREBOARD 🏆 =======");
+		    System.out.println("Player X score: " + playerXScore);
+		    System.out.println("Player O score: " + playerOScore);
+		    System.out.println("Number of ties: " + ties);
+		    System.out.println("================================");
+		    
+    
+	//play again
+		 System.out.println("Play again?");
+	     System.out.println("1 - YES");
+	     System.out.println("2 - NO");
+	     int choice = input.nextInt();
+	     if (choice != 1) {
+	         System.out.println("Thanks for playing 👋");
+	         System.out.println("Exiting....");
+	         break;
+	     
+	}
+	
+	}
+}
+
+
+// player vs machine feature , lets player play against a simple AI
+public static void playerVsMachine (Scanner input) {
+	int playerXScore = 0;
+	int playerOScore = 0;
+	int ties = 0;
+	char player = 'X';
+    char machinePlayer = 'O';
+
+    while (true) {  // play again loop 
+        int moves = 0;
+        char[][] board = new char[3][3];
+        generateBoard(board);
+
+        while (true) {
+            PrintBoard(board);
+
+            char currentPlayer;
+
+            if (moves % 2 == 0) {
+                // player turn
+                System.out.println("It's your turn player! Enter row and column (1-3): ");
+                int col = input.nextInt() - 1;
+                int row = input.nextInt() - 1;
+
+                // check for valid moves
+                if (row < 0 || row > 2 || col < 0 || col > 2 || board[row][col] != '_') {
+                    System.out.println("Invalid move, try again.");
+                    continue;
+                }
+
+                board[row][col] = player;
+                currentPlayer = player;
+
+            } else {
+                // machine turn
+                System.out.println("Machine turn O .... ");
+                int[] move = getRandomMoves(board);
+                board[move[0]][move[1]] = machinePlayer;
+                currentPlayer = machinePlayer;
+            }
+
+            // checks for win for both player
+            if (checkForWin(board, currentPlayer)) {
+                PrintBoard(board);
+                if (currentPlayer == player) {
+                    System.out.println("🎉🎉🎉 You WIN!!! 🎉🎉🎉");
+                    playerXScore++;
+                } else {
+                    System.out.println("The MACHINE Wins !!");
+                    playerOScore++;
+                }
+                break;
+            }
+
+            moves++;
+
+            // checks for draw
+            if (moves == 9) {
+                PrintBoard(board);
+                System.out.println("It's a TIE !! 🤝 ");
+                ties++;
+                break;
+            }
+            
+            
+        }
+        //ScoreBoard
+        System.out.println();
+        System.out.println("======= 🏆 SCOREBOARD 🏆 =======");
+        System.out.println("Player X score: " + playerXScore);
+        System.out.println("Player O score: " + playerOScore);
+        System.out.println("Number of ties: " + ties);
+        System.out.println("================================");
+        
+        
+        // sub menu for player , play again feature
+        System.out.println("Play again?");
+        System.out.println("1 - YES");
+        System.out.println("2 - NO");
+        int choice = input.nextInt();
+        if (choice != 1) {
+            System.out.println("Thanks for playing 👋");
+            System.out.println("Exiting....");
+            break;
+        }
+    }
+}
+
+// generate random moves
+public static int[] getRandomMoves (char [][] board) {
+	Random rand = new Random();
+	int row, col;
+			
+	
+		while(true) {
+			row = rand.nextInt(3);
+			col = rand.nextInt(3);	
+				if(board[row][col] == '_') { //looks for an empty cell on the board
+					return new int[] {row ,col}; //random input for row and col based on available cells
+				}
+		}
+}
+public static void tournamentVsPlayer(Scanner input) {
+    int roundsPlayed = 0;
+    int scoreX = 0;
+    int scoreO = 0;
+
+    System.out.println("🎯 Welcome to Tournament Mode: Player vs Player!");
+    System.out.print("How many rounds would you like to play? ");
+    int totalRounds = input.nextInt();
+
+    while (roundsPlayed < totalRounds) {
+        System.out.println("\n══════════ Round " + (roundsPlayed + 1) + " ══════════");
+
+        int winner = playSingleRoundVsPlayer(input);
+
+        if (winner == 1) {
+            scoreX++;
+        } else if (winner == 2) {
+            scoreO++;
+        }
+
+        roundsPlayed++;
+        System.out.println("Current Score: Player X - " + scoreX + " | Player O - " + scoreO);
+    }
+
+    System.out.println("\n🏁 Tournament Over!");
+    if (scoreX > scoreO) {
+        System.out.println("🏆 Player X wins the tournament!");
+    } else if (scoreO > scoreX) {
+        System.out.println("🏆 Player O wins the tournament!");
+    } else {
+        System.out.println("🤝 It's a draw!");
+    }
+}
+
+public static int playSingleRoundVsPlayer(Scanner input) {
+    int moves = 0;
+    char currentPlayer = 'X';
+    char[][] board = new char[3][3];
+    generateBoard(board);
+
+    while (true) {
+        PrintBoard(board);
+        System.out.println("Player " + currentPlayer + ", enter row and column (1-3): ");
+        int col = input.nextInt() - 1;
+        int row = input.nextInt() - 1;
+
+        if (row < 0 || row > 2 || col < 0 || col > 2 || board[row][col] != '_') {
+            System.out.println("Invalid move, try again.");
+            continue;
+        }
+
+        board[row][col] = currentPlayer;
+        moves++;
+
+        if (checkForWin(board, currentPlayer)) {
+            PrintBoard(board);
+            System.out.println("🎉 Player " + currentPlayer + " wins this round!");
+            return currentPlayer == 'X' ? 1 : 2;
+        }
+
+        if (moves == 9) {
+            PrintBoard(board);
+            System.out.println("🤝 It's a tie.");
+            return 0;
+        }
+
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+    }
+}
+
+
+public static int playerVsMachineRound(Scanner input) {
+	int moves = 0;
+	char[][]board = new char[3][3];
+	generateBoard(board);
+	
+	char player = 'X';
+	char machinePlayer = 'O';
+	
+	while(true) {
+		PrintBoard(board);
+		char currentPlayer;
+		
+		if(moves % 2 == 0) {
+			System.out.println("Your move ! enter value for col and row (1 -3)");
+			int col = input.nextInt() - 1;
+			int row = input.nextInt()	- 1;
+			
+			if(row < 0 || row > 2 || col < 0 || col > 2 || board[row][col] != '_') {
+				System.out.println("Invalid move ! try again !"); 
+				continue;
+			}
+			board[row][col] = player;
+			currentPlayer = player;
+		} else {
+			System.out.println("Machine turn...");
+			int[] move = getRandomMoves(board);
+			board[move[0]][move[1]] = machinePlayer;
+			currentPlayer = machinePlayer;
+		}
+		if(checkForWin(board, currentPlayer)) {
+			PrintBoard(board);
+			if(currentPlayer == player) {
+				System.out.println("🎉 You win this round!");
+				return 1;
+			} else {
+				System.out.println("💻 Machine wins this round!");
+				return 2;
+			}
+		}
+		
+		moves++;
+		if(moves == 9) {
+			PrintBoard(board);
+			System.out.println("It's a tie !");
+			return 0;
+		}
+	}
+}
+public static void tournamentVsMachine(Scanner input) {
+    System.out.println("🎮 Welcome to Tournament Mode - Player vs Machine!");
+    System.out.print("How many rounds would you like to play? ");
+    int rounds = input.nextInt();
+
+    int playerScore = 0;
+    int machineScore = 0;
+    int ties = 0;
+
+    for (int round = 1; round <= rounds; round++) {
+        System.out.println("\n----- Round " + round + " -----");
+        int result = playerVsMachineRound(input);
+//updates the score
+        if (result == 1) {
+            playerScore++;
+        } else if (result == 2) {
+            machineScore++;
+        } else {
+            ties++;
+        }
+
+        System.out.println("Current Score => Player: " + playerScore + " | Machine: " + machineScore + " | Ties: " + ties);
+    }
+
+    // Final result
+    System.out.println("\n===== Tournament Over =====");
+    if (playerScore > machineScore) {
+        System.out.println("🏆 You won the tournament!");
+    } else if (machineScore > playerScore) {
+        System.out.println("🤖 The Machine won the tournament!");
+    } else {
+        System.out.println("⚖️ It's a draw!");
+    }
+}
+
+}
+
+
